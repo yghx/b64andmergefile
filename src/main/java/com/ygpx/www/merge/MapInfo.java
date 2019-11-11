@@ -1,8 +1,6 @@
 package com.ygpx.www.merge;
 
 import com.ygpx.www.utils.FileConstant;
-import com.ygpx.www.utils.FileUtils;
-import com.ygpx.www.utils.IDealFile;
 
 import java.io.*;
 import java.util.HashMap;

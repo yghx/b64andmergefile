@@ -1,21 +1,16 @@
 package com.ygpx.www.b64;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.Base64;
 
 public class B64 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(B64.class);
-
     private static int p_mode;
 
     public static void main(String[] args) {
-        // 加密
+        // 编码
 //        x2B64("", B64Constant.ENCODE);
-        // 解密
+        // 解码
         x2B64("", B64Constant.DECODE);
     }
 
@@ -39,12 +34,10 @@ public class B64 {
                 try {
                     startX2B64(file);
                 } catch (IOException e) {
-                    LOG.error("ygpx_error:[io] {}", e.getMessage());
                     e.printStackTrace();
                 }
             }
         } else {
-            LOG.error("ygpx_error:[file] The file do not exists!");
         }
     }
 
@@ -52,15 +45,28 @@ public class B64 {
         String originName = file.getName();
         String parPath = file.getParent();
         String b64Name = null;
+
+        if (p_mode != B64Constant.ENCODE) {
+            if (originName != null ) {
+                originName = originName.replaceAll(" ","/");
+            }
+        }
+
         if (p_mode == B64Constant.ENCODE) {
             b64Name = new String(x2B64Encoder(originName), B64Constant.ENCODING_UTF_8);
-            if(!originName.contains(".")){
+            if (!originName.contains(".")) { // 必须有扩展名文件
                 return;
             }
         } else {
             b64Name = new String(b642XDecoder(originName), B64Constant.ENCODING_UTF_8);
-            if(originName.contains(".")){
+            if (originName.contains(".")) {
                 return;
+            }
+        }
+        // windows文件名不能包含特殊字符 base64只有'\'不能作为文件名称,但是base64码表是'/' ? 疑惑
+        if (p_mode == B64Constant.ENCODE) {
+            if (b64Name != null ) {
+                b64Name = b64Name.replaceAll("/"," ");
             }
         }
 
